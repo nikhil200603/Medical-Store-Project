@@ -1,0 +1,79 @@
+# version : '3.9'
+
+# services:
+#   # django:
+#   #   image: django-docker:0.0.1
+#   #   build: .
+#   #   ports:
+#   #     - 8000:8000
+
+#   db:
+#     image: postgres
+#     env_file:
+#       - .env
+
+#   mongo:
+#     image: mongo
+#     container_name: mongo
+#     restart: always
+#     env_file: .env
+#     volumes:
+#       - ./data/mongo:/data/db
+#     ports:
+#       - 27017:27017
+
+#   web:
+#     build: .
+#     command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+#     volumes:
+#       - .:/code
+#     ports:
+#       - "8000:8000"
+#     depends_on:
+#       - db
+#       - mongo
+#     env_file:
+#       - .env
+
+
+version: '3'
+services:
+  web:
+    build: .
+    restart: always
+    command: "python manage.py runserver 0.0.0.0:8000"
+    env_file: .env
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+    depends_on:
+      - postgres
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: always
+    env_file: .env
+    volumes:
+      - ./data/mongo:/data/db
+    ports:
+      - 27017:27017
+  postgres:
+    container_name: postgres
+    image: postgres
+    restart: always
+    env_file: .env
+    environment:
+      - POSTGRES_DB=adcuratioproject
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=nikhil
+      - POSTGRES_PORT=5432
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+networks:
+  default:

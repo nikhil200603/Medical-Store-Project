@@ -1,0 +1,83 @@
+# version: "3"
+# services:
+#   web:
+#     build: .
+#     restart: always
+#     command: "python manage.py runserver 0.0.0.0:8000"
+#     volumes:
+#       - .:/code
+#     # environment:
+#     #   - DB_URI=mongodb://localhost:27017
+#     ports:
+#       - 8000:8000
+#     depends_on:
+#       - postgres
+#       - mongo
+#     environment:
+#       - MONGO_URI=mongodb://mongo:27017
+#   mongo:
+#     image: mongo
+#     container_name: mongo
+#     restart: always
+#     volumes:
+#       - ./data/mongo:/data/db
+#     ports:
+#       - 27017:27017
+#   postgres:
+#     container_name: postgres
+#     image: postgres
+#     restart: always
+#     environment:
+#       - POSTGRES_DB=postgres
+#       - POSTGRES_USER=customer_data_table
+#       - POSTGRES_PASSWORD=jayendra1017
+#       - POSTGRES_PORT=5432
+#     ports:
+#       - 5432:5432
+#     volumes:
+#       - ./data/db:/var/lib/postgresql/data
+# networks:
+#   default:
+
+
+version: '3'
+services:
+  web:
+    build: .
+    restart: always
+    command: "python manage.py runserver 0.0.0.0:8000"
+    env_file: .env
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+    depends_on:
+      - postgres
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: always
+    env_file: .env
+    volumes:
+      - ./data/mongo:/data/db
+    ports:
+      - 27017:27017
+  postgres:
+    container_name: postgres
+    image: postgres
+    restart: always
+    env_file: .env
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=jayendra1017
+      - POSTGRES_PORT=5432
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+networks:
+  default:

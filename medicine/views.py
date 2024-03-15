@@ -30,18 +30,8 @@ if 'medicine_details' not in l:
 else:
     collection=db.medicine_details
 
-# print(db.list_collection_names())
-# print(collection.find()[0]['name'])
-# collection.insert_one({
-#     "name":"Flexon",
-#     "category":"Paracetamol",
-#     "price":10,
-#     "date_of_manufacture":"11/03/2024",
-#     "expiry":"11/03/2026",
-#     "power_in_mg":200,
-#     "manufactured_by":"Atlantis Pharmaceuticals",
-# })
-    
+
+
 
 list=["name","category","price","date_of_manufacture","expiry","power_in_mg","manufactured_by"]
 
@@ -68,20 +58,9 @@ class MedicineAPI(APIView):
     
     def post(self,request):
         d=request.data
-        if "name" not in d:
-            return Response({"status":403,"message":"name feild missing"})
-        if "category" not in d:
-            return Response({"status":403,"message":"category feild missing"})
-        if "price" not in d:
-            return Response({"status":403,"message":"price feild missing"})
-        if "date_of_manufacture" not in d:
-            return Response({"status":403,"message":"date_of_manufacture feild missing"})
-        if "expiry" not in d:
-            return Response({"status":403,"message":"expiry feild missing"})
-        if "power_in_mg" not in d:
-            return Response({"status":403,"message":"power_in_mg feild missing"})
-        if "manufactured_by" not in d:
-            return Response({"status":403,"message":"manufactured_by feild missing"})
+        for item in list:
+            if item not in d:
+                return Response({"status":200,"message":item +" feild is  missing"})
         collection.insert_one(d)
         return Response({"status":200,"message":"Data Saved Succesfully"})
     
@@ -90,25 +69,18 @@ class MedicineAPI(APIView):
         
 
     def put(self,request):
+
         d=request.data
-        if "name" not in d:
-            return Response({"status":200,"message":"name feild missing"})
-        if "category" not in d:
-            return Response({"status":403,"message":"category feild missing"})
-        if "price" not in d:
-            return Response({"status":403,"message":"price feild missing"})
-        if "date_of_manufacture" not in d:
-            return Response({"status":403,"message":"date_of_manufacture feild missing"})
-        if "expiry" not in d:
-            return Response({"status":403,"message":"expiry feild missing"})
-        if "power_in_mg" not in d:
-            return Response({"status":403,"message":"power_in_mg feild missing"})
-        if "manufactured_by" not in d:
-            return Response({"status":403,"message":"manufactured_by feild missing"})
+        for item in list:
+            if item not in d:
+                return Response({"status":200,"message":item +" feild is missing"})
         first={"name":d["name"]}
         second={"$set":{"category":d["category"],"price":d["price"],"date_of_manufacture":d["date_of_manufacture"],"expiry":d["expiry"],"power_in_mg":d["power_in_mg"],"manufactured_by":d["manufactured_by"]}}
         collection.update_one(first,second)
         return Response({"status":200,"message":"Data Updated Succesfully"})
+
+
+
 
     def patch(self,request):
         d=request.data
@@ -139,9 +111,6 @@ class MedicineAPI(APIView):
         print("collection")
         return Response({"status":200,"message":"Data Deleted Succesfully"})
 
-# class RegisterUser(APIView):
-#     def post(self,request):
-#         serializer=UserSerializer(data=request.data)
 
     
 

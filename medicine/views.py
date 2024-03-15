@@ -60,7 +60,7 @@ class MedicineAPI(APIView):
         d=request.data
         for item in list:
             if item not in d:
-                return Response({"status":200,"message":item +" feild is  missing"})
+                return Response({"status":403,"message":item +" feild is  missing"})
         collection.insert_one(d)
         return Response({"status":200,"message":"Data Saved Succesfully"})
     
@@ -73,7 +73,7 @@ class MedicineAPI(APIView):
         d=request.data
         for item in list:
             if item not in d:
-                return Response({"status":200,"message":item +" feild is missing"})
+                return Response({"status":403,"message":item +" feild is missing"})
         first={"name":d["name"]}
         second={"$set":{"category":d["category"],"price":d["price"],"date_of_manufacture":d["date_of_manufacture"],"expiry":d["expiry"],"power_in_mg":d["power_in_mg"],"manufactured_by":d["manufactured_by"]}}
         collection.update_one(first,second)
@@ -90,7 +90,7 @@ class MedicineAPI(APIView):
         print(d)
         for key in d.keys():
             if key not in list:
-                return Response({"status":200,"message":key+" "+"is Invalid Feild"})
+                return Response({"status":403,"message":key+" "+"is Invalid Feild"})
             l.append(key)
         length=len(l)
         dic={}
